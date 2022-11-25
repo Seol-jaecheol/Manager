@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>사용자 정보 보기</title>
+
+<style>
+body { font-family: "나눔고딕", "맑은고딕" }
+h1 { font-family: "HY견고딕" }
+a:link { color: black; }
+a:visited { color: black; }
+a:hover { color: red; }
+a:active { color: red; }
+a { text-decoration : none; cursor: hand; }
+#topBanner {
+    margin-top:10px;
+    margin-bottom:10px;
+    max-width: 500px;
+    height: auto;
+    display: block; margin: 0 auto;
+}
+.mbrInfoView {
+    text-align:left;
+    width:900px;
+    height:auto;
+    padding: 20px, 20px;
+    background-color:#FFFFFF;
+    border:4px solid gray;
+    border-radius: 20px;
+}
+.userid, .username, .ac, .telno, .email, .regdate, .address,
+.lastlogindate, .lastpwdate {
+    width: 90%;
+    height:25px;
+    outline:none;
+    color: #636e72;
+    font-size:16px;
+    background: none;
+    border-bottom: 2px solid #adadad;
+    margin: 30px;
+    padding: 10px 10px;
+}
+#ImageView {
+                border: 2px solid #92AAB0;
+                width: 450px;
+                height: 200px;
+                color: #92AAB0;
+                text-align: center;
+                vertical-align: middle;
+                margin: 30px;
+  				padding: 10px 10px;
+                font-size:200%;
+                display: table-cell;
+                
+}
+.bottom_menu { margin-top: 20px; }
+.bottom_menu > a:link, .bottom_menu > a:visited {
+          background-color: #FFA500;
+          color: maroon;
+          padding: 15px 25px;
+          text-align: center;	
+          display: inline-block;
+          text-decoration : none; 
+}
+.bottom_menu > a:hover, .bottom_menu > a:active { 
+      background-color: #1E90FF;
+      text-decoration : none; 
+}      
+</style>
+
+<script>
+
+function memberInfoDelete() {
+	
+	if(confirm("사용자 탈퇴를 하시면 작성하셨던 모든 게시물도 함께 삭제됩니다. \n정말로 사용자 탈퇴 하시겠습니까?") == true)
+	 	{ alert("사용자 정보가 삭제 되었습니다."); location.href='/member/memberInfoDelete';  } 	
+}
+</script>
+</head>
+
+<body>
+
+<div>
+   <img id="topBanner" src ="/images/logo.jpg" title="서울기술교육센터" >
+</div>
+
+<div class="main" align="center">
+
+    <div class="mbrInfoView">
+        <h1 style="text-align:center;">사용자 정보</h1>
+         <center><div id="ImageView"><img th:src="@{'/profile/' + ${member.stored_filename}}" style='width:300px; height:auto;'></div></center>
+         <div class="userid">아이디 : [[ ${session.userid} ]]</div>
+		 <div class="username">이름 : [[ ${session.username} ]]</div>
+         <div class="telno">전화번호 : [[ ${member.telno} ]]</div>
+         <div class="address">주소 : ([[ ${member.zipcode} ]]) [[${member.address}]]</div>
+         <div class="email">이메일주소 : [[ ${member.email} ]]</div>
+         <div class="regdate">서비스 가입일 : <span th:text="${member.regdate}"></span></div>
+         <div class="lastlogindate">마지막 로그인 일자 : <span th:text="${member_date.lastlogindate}"></span> </div>
+         <div th:if="${member.lastpwdate != null}" class="lastpwdate">마지막 패스워드 변경 일자 : <span th:text="${member.lastpwdate}"></span></div>
+         <div th:if="${member.lastpwdate == null}" class="lastpwdate">패스워드 변경 이력이 없습니다.</div>
+    	 <div th:if="${session.role == 'admin'}"class="ac">권한 : 마스터 관리자 </div>
+    	 <div th:if="${session.role == 'user'}"class="ac">권한 : 일반 사용자 </div>
+    </div>     
+<br><br>
+    <div class="bottom_menu" align="center">
+        &nbsp;&nbsp;
+        <a href="/board/list?page=1">처음으로</a> &nbsp;&nbsp;
+        <a href="/userManage/memberInfoModify">기본정보 변경</a> &nbsp;&nbsp;
+        <a href="/userManage/memberPasswordModify">패스워드 변경</a> &nbsp;&nbsp;
+        <a href="javascript:memberInfoDelete();">회원탈퇴</a> &nbsp;&nbsp;
+    </div>
+<br><br>
+</div>
+
+</body>
+</html>
