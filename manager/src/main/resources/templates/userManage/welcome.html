@@ -1,0 +1,116 @@
+<!--
+=========================================================
+* Paper Dashboard 2 - v2.0.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-2
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+	<meta charset="utf-8" />
+
+	<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" href="/assets/img/favicon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>
+		Paper Dashboard 2 by Creative Tim
+	</title>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+	<!--     Fonts and icons     -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+	<!-- CSS Files -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="/assets/css/paper-dashboard.css?v=2.0.1" rel="stylesheet" />
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link href="/assets/demo/demo.css" rel="stylesheet" />
+	<script>
+  /*<![CDATA[*/
+  function search(){
+
+      var searchType = $("#searchType").val();
+      var keyword =  $("#keyword").val();
+      location.href = '/board/list?page=[[${page}]]&searchType=' + searchType + '&keyword=' + keyword;
+  }
+  /*]]>*/
+  </script>
+</head>
+
+<body class="">
+<div class="wrapper ">
+
+	<div >
+
+		<div class="content">
+<!--			<div class="row">-->
+<!--				<div class="col-md-12">-->
+					<div class="card">
+						<div class="card-header">
+							<h2 class="card-title"> 로그인 정보 </h2>
+						</div>
+						<div class="card-body">
+<!--							<div class="table-responsive">-->
+								<table class="table">
+
+									<tbody>
+									<tr onMouseover="this.style.background='#46D2D2';" onmouseout="this.style.background='white';">
+										<td>
+											<h4>■ 사용자아이디 / 사용자 이름 : [[${userid}]] / ([[${username}]])</h4>
+										</td>
+									</tr>
+									<tr onMouseover="this.style.background='#46D2D2';" onmouseout="this.style.background='white';">
+										<td>
+											<h4>■ 회원 가입일 : <span th:text="${regdate}"></span></h4>
+										</td>
+									</tr>
+									<tr onMouseover="this.style.background='#46D2D2';" onmouseout="this.style.background='white';">
+										<td>
+											<h4>■ 마지막 로그인 날짜 : [[${lastlogindate}]]</h4>
+										</td>
+
+									</tr>
+									</tbody>
+
+								</table>
+<!--							</div>-->
+
+					</div>
+<!--				</div>-->
+<!--			</div>-->
+		</div>
+
+	</div>
+
+</div>
+	<div th:if="${session.role == 'ADMIN'}" >
+		<h4><p style="text-align:center;"><a href="/userManage/dashboard">[대시보드]</a> | <p style="text-align:center;"><a href="/board/list?page=1">[게시판]</a> | <a href="/userManage/memberList">[사용자 목록]</a> | <a href="/userManage/regestList">[계정요청]</a> | <a href="/userManage/logout">[로그아웃]</a></p></h4>
+	</div>
+	<div th:if="${session.role == 'USER'}" >
+		<h4><p style="text-align:center;"><a href="/userManage/dashboard">[대시보드]</a> | <h4><p style="text-align:center;"><a href="/board/list?page=1">[게시판 가기]</a> | <a href="/userManage/memberList">[사용자 목록]</a> | <a href="/userManage/logout">[로그아웃]</a></p></h4>
+	</div>
+<!--   Core JS Files   -->
+<script src="/assets/js/core/jquery.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
+<script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<!--  Google Maps Plugin    -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!-- Chart JS -->
+<script src="/assets/js/plugins/chartjs.min.js"></script>
+<!--  Notifications Plugin    -->
+<script src="/assets/js/plugins/bootstrap-notify.js"></script>
+<!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="/assets/js/paper-dashboard.min.js?v=2.0.1" type="text/javascript"></script><!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+<script src="/assets/demo/demo.js"></script>
+</body>
+
+</html>

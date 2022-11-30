@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.manager.mapper.MemberMapper">
+
+<!-- 게시글수 -->
+<select id="boardcount" resultType="int">
+
+select count(*)  
+	from tbl_board
+
+</select>
+
+<!-- 사용자 정보 등록 -->
+<insert id="memberInfoRegistry" parameterType="string">
+
+insert into tbl_member
+select *
+from tbl_member_ready
+where userid = #{userid}
+
+</insert>
+
+<!-- 계정 요청목록 삭제 -->
+<delete id="memberInfoReadyDelete" parameterType="string">
+
+delete from tbl_member_ready
+where userid = #{userid}
+
+</delete>
+
+<!-- 사용자 계정요청 등록 -->
+<insert id="memberInfoRegistryReady" parameterType="com.manager.dto.MemberVO">
+
+insert into tbl_member_ready (userid,username,password,telno,email,regdate,
+	role,org_filename,stored_filename,filesize,zipcode,address,lastpwdate,pwcheck)  
+	values (#{userid},#{username},#{password},#{telno},#{email},sysdate,'USER',
+	#{org_filename},#{stored_filename},#{filesize},#{zipcode},#{address},
+	sysdate,1)
+
+</insert>
+
+<!-- 사용자 리스트보기 -->
+<select id="memberList" resultType="com.manager.dto.MemberVO">
+
+select userid,username,telno,email
+	,org_filename,stored_filename,zipcode,address  
+	from tbl_member
+
+</select>
+
+<!-- 사용자 계정요청 리스트보기 -->
+<select id="memberInfoRegistryList" resultType="com.manager.dto.MemberVO">
+
+select userid,username,telno,email,regdate
+	,org_filename,stored_filename,zipcode,address  
+	from tbl_member_ready
+
+</select>
+
+<!-- 사용자 계정요청 자세히 -->
+<select id="memberInfoRegistryDetail" parameterType="string" resultType="com.manager.dto.MemberVO">
+
+select userid,username,password,telno,email,regdate,
+	role,org_filename,stored_filename,filesize,zipcode,address,lastpwdate,pwcheck  
+	from tbl_member_ready where userid = #{userid}
+
+</select>
+
+<!-- ID 확인 -->
+<select id="idCheck" parameterType="string" resultType="int">
+	select count(*) from tbl_member where userid = #{userid}
+</select>
+
+<!-- 마지막 로그인 날짜 등록 -->	
+<insert id="logindateUpdate" parameterType="string">
+	insert into tbl_member_log (userid,inouttime,status) values (#{userid},sysdate,'IN')
+</insert>
+
+<!-- 로그인 시 필요한 정보 가져 오기-->
+<select id="login" parameterType="string" resultType="com.manager.dto.MemberVO">
+    select userid, username, password, role from tbl_member where userid = #{userid}
+</select>
+
+<!-- welcome 페이지에서 볼 정보 가져 오기-->
+<select id="welcomeView" parameterType="string" resultType="com.manager.dto.MemberVO">
+select (select to_char(max(inouttime),'YYYY-MM-DD HH24:MI:SS') from tbl_member_log where userid=#{userid} and status='IN') as lastlogindate,
+    (select to_char(max(inouttime),'YYYY-MM-DD HH24:MI:SS') from tbl_member_log where userid=#{userid} and status='OUT') as lastlogoutdate,
+    (select regdate from tbl_member where userid=#{userid}) as regdate from dual
+</select>
+
+<!-- 로그아웃 날짜 등록 -->
+<insert id="logoutUpdate" parameterType="string">
+	insert into tbl_member_log (userid,inouttime,status) values(#{userid},sysdate,'OUT')
+</insert>
+
+<!-- 사용자 정보 보기 -->
+<select id="memberInfoView" parameterType="string" resultType="com.manager.dto.MemberVO">
+	select userid,username,password,telno,email,role,org_filename,stored_filename,filesize,zipcode,address,
+	to_char(regdate,'YYYY-MM-DD HH24:MI:SS') as regdate from tbl_member where userid = #{userid}
+</select>
+
+<!-- 사용자 정보 수정 -->
+<update id="memberInfoUpdate" parameterType="com.manager.dto.MemberVO">
+	update tbl_member set telno=#{telno}, email=#{email}, zipcode=#{zipcode},
+		address=#{address}, org_filename=#{org_filename}, stored_filename=#{stored_filename},
+		filesize=#{filesize} where userid=#{userid}
+</update>
+
+<!-- 패스워드 수정 -->
+<update id="passwordUpdate" parameterType="com.manager.dto.MemberVO">
+	update tbl_member set password=#{password}, lastpwdate=sysdate,pwcheck=1 where userid=#{userid}
+</update>
+
+<!--  사용자 패스워드 변경 후 30일 경과 여부 확인 -->
+<select id="pwcheck" parameterType="string" resultType="com.manager.dto.MemberVO">
+	select round(sysdate - lastpwdate) as pwdiff,pwcheck from tbl_member where userid = #{userid}
+</select>
+
+<!--  사용자 패스워드 변경-->
+<update id="memberpasswordModifyAfter30" parameterType="String">
+	update tbl_member set pwcheck=(pwcheck+1) where userid=#{userid}
+</update>
+
+<!-- 사용자 아이디 찾기 -->
+<select id="searchID" parameterType="com.manager.dto.MemberVO" resultType="string">
+	select userid from tbl_member where username=#{username} and telno=#{telno}
+</select>
+
+<!-- 패스워드 임시 발급을 위한 확인 -->
+<select id="searchPassword" parameterType="com.manager.dto.MemberVO" resultType="int">
+	select count(*) from tbl_member where userid=#{userid} and username=#{username}
+</select>
+
+<!-- 회원 탈퇴 -->
+<delete id="memberInfoDelete" parameterType="string">
+	delete from tbl_member where userid=#{userid}
+</delete>
+
+<!-- 우편번호 행 최대 갯수 계산 -->
+<select id="addrTotalCount" parameterType="string" resultType="int">
+	select count(*) from tbl_addr where road like '%'||#{addSearch}||'%'
+		or building like '%'||#{addrSearch}||'%'
+</select>
+
+<!-- 우편번호 검색 -->
+<select id="addrSearch" parameterType="java.util.HashMap" resultType="com.manager.dto.AddressVO">
+
+	select zipcode, province, road, building, oldaddr from 
+	(select zipcode, province, road, building, oldaddr, row_number() over(order by zipcode) as rnum  
+	from tbl_addr where road like '%'||#{addrSearch}||'%' 
+	or building like '%'||#{addrSearch}||'%') addr 
+	where rnum between #{startPoint} and #{endPoint} order by zipcode
+
+</select>
+
+
+
+</mapper>

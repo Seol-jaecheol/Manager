@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<head>
+<script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+
+<title>계정 요청 목록</title>
+
+<style>
+body { font-family: "나눔고딕", "맑은고딕" }
+h1 { font-family: "HY견고딕" }
+a:link { color: black; }
+a:visited { color: black; }
+a:hover { color: red; }
+a:active { color: red; }
+#hypertext { text-decoration-line: none; cursor: hand; }
+#topBanner {
+       margin-top:10px;
+       margin-bottom:10px;
+       max-width: 500px;
+       height: auto;
+       display: block; margin: 0 auto;
+}
+
+.tableDiv {
+	text-align: center;
+}
+
+.InfoTable {
+      border-collapse: collapse;
+      border-top: 3px solid #168;
+      width: 800px;  
+      margin-left: auto; margin-right: auto;
+    }  
+    .InfoTable th {
+      color: #168;
+      background: #f0f6f9;
+      text-align: center;
+    }
+    .InfoTable th, .InfoTable td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    .InfoTable th:first-child, .InfoTable td:first-child {
+      border-left: 0;
+    }
+    .InfoTable th:last-child, .InfoTable td:last-child {
+      border-right: 0;
+    }
+    .InfoTable tr td:first-child{
+      text-align: center;
+    }
+    .InfoTable caption{caption-side: top; }
+
+.bottom_menu { margin-top: 20px; }
+.bottom_menu > a:link, .bottom_menu > a:visited {
+          background-color: #FFA500;
+          color: maroon;
+          padding: 15px 25px;
+          text-align: center;	
+          display: inline-block;
+          text-decoration : none; 
+}
+.bottom_menu > a:hover, .bottom_menu > a:active { 
+      background-color: #1E90FF;
+      text-decoration : none; 
+}      
+
+</style>
+
+<script>
+/*<![CDATA[*/	
+function search(){
+	
+	var searchType = $("#searchType").val();
+	var keyword =  $("#keyword").val();
+	location.href = '/userManage/regeList?page=[[${page}]]&searchType=' + searchType + '&keyword=' + keyword;
+}
+/*]]>*/
+</script>
+
+</head>
+
+<body>
+
+<div class="tableDiv">
+
+	<div>
+		<img id="topBanner" src ="/images/logo.jpg" title="서울기술교육센터" >
+	</div>
+
+	<h1>계정 요청 목록</span></h1>
+	<table class="InfoTable">
+  		<tr>
+   			<th>사진</th>
+   			<th>이름</th>
+   			<th>아이디</th>
+   			<th>전화번호</th>
+   			<th>주소</th>
+			<th>등록 요청일</th>
+			<th>자세히보기</th>
+  		</tr>
+
+ 		<tbody>
+			<tr th:each="list : ${list}" onMouseover="this.style.background='#46D2D2';" onmouseout="this.style.background='white';">
+  				<!-- <td><span th:text="${listStat.count}"></span></td>  -->
+  				<td><img th:src="@{'/profile/' + ${list.stored_filename}}" width="100" height="100"></td>
+  				<td><span th:text="${list.username}"></span></td>
+  				<td><span th:text="${list.userid}"></span></td>
+  				<td><span th:text="${list.telno}"></span></td> 
+  				<td><span th:text="${list.address}"></span></td> 
+				<td><span th:text="${list.regdate}"></span></td>
+				<td style="text-align:left;"><a id="hypertext" th:href="@{'/userManage/memberInfoRegest?userid=' + ${list.userid} }" onMouseover='this.style.textDecoration="underline"'  
+					onmouseout="this.style.textDecoration='none';"><span th:text="자세히보기"></span></a></td>
+ 			</tr>
+		</tbody>
+
+	</table>
+	<p style="text-align: center"></p>
+	
+	<div>
+  		<select id="searchType" name="searchType">
+      		<option value="username">이름</option>
+      		<option value="userid">아이디</option>
+      		<option value="telno">전화번호</option>
+  		</select>
+    	<input type="text" id="keyword" name="keyword" />
+  		<button type="button" onclick="search()">검색</button>
+ 	</div>
+<br><br>	
+	<div>
+	[(${pageListView})]<br>
+
+	</div>
+
+<br><br>
+	<div class="bottom_menu" align="center">
+  		&nbsp;&nbsp;
+  		<a href="/userManage/welcome">처음으로</a> &nbsp;&nbsp;
+  		<a href="/userManage/logout">로그아웃</a> &nbsp;&nbsp;
+	</div>
+	
+</div>
+<br><br>
+
+</body>
+</html>
